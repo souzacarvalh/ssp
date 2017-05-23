@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panelmenu>
+	<submenus>
+		<submenu label="#{msgs.menu_customer}" icon="fa fa-home">
+			<menuitems>
+				<menuitem value="#{msgs.menu_option_my_tickets}" url="/pages/customer/home.jsf" icon="fa fa-home" />
+				<menuitem value="#{msgs.menu_option_new_ticket}" url="/pages/customer/tickets/newTicket.jsf" icon="fa fa-ticket" />
+				<menuitem value="#{msgs.menu_option_search}" url="#" icon="fa fa-search" />
+				<menuitem value="#{msgs.menu_option_rate}" url="/pages/customer/feedback/rating.jsf" icon="fa fa-star" />
+				<menuitem value="#{msgs.menu_option_faq}" url="#" icon="fa fa-book" />
+			</menuitems>
+		</submenu>
+	</submenus>
+</panelmenu>

@@ -1,0 +1,217 @@
+@CHARSET "ISO-8859-1";
+
+/* Index Support Login Page */
+#mainContainerIndex
+{
+	width: 1570px;
+	height: 760px;
+	position: absolute;
+	margin: 0 auto;
+	padding: 0;
+}
+
+#index-logo
+{
+	width: 300px;
+	height: 140px;
+	position: relative;
+	margin-top: 130px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#index-login-area
+{
+	width: 469px;
+	height: 234px;
+	position: relative;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image:url("#{resource['ssp-web-res/images:login-bg.png']}"); 
+}
+
+#index-version
+{
+	width: 469px;
+	height: 17px;
+	position: relative;
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-size: 10px;
+}
+
+#index-login-area tr, #index-login-area td
+{
+    border-style: none;
+}
+
+#index-login-area label
+{
+	color: #AAA;
+	font-weight: bold;
+}
+
+.index-toolbar
+{
+	margin-top: -5px;
+}
+
+#index-login-fields
+{
+	position: absolute;
+	width: 350px;
+	top: 58px;
+	right: 52px;
+}
+
+#index-login-fields #form-login
+{
+	float: right;
+	top: 0;
+	right: 0;
+}
+
+#index-login-messages
+{
+	float: right;
+	margin-top: -90px;
+}
+
+#index-login-messages .ui-widget 
+{
+    font-size: 75%;
+}
+
+#index-watermark
+{
+	position: absolute;
+	left: -10px;
+	bottom: 10px;
+}
+
+#index-footer
+{
+	width: 100%;
+	height: 210px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.index-footer-content
+{
+	position: absolute;
+	bottom: 5px;
+	left: 44%;
+}
+
+/* Header Elements */
+#sspMemberPhoto
+{
+	position: absolute;
+	top: 6px;
+	left: 2px;
+}
+
+#sspLogoInline
+{
+	float: right;
+	margin: 40px 0 0 0;
+}
+
+#loggedUserInfo
+{
+	width: 262px;
+	position: absolute;
+	top: 77px;
+	left: 2px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#loggedUserInfo i 
+{
+	margin-right: 5px;
+}
+
+/* Home Page */
+.ssp-table-filter
+{
+	width: 100%;
+	height: 43px;
+	top: 512px;
+	position: absolute;
+	padding-top: 2px;
+	color: #000;
+	text-align: right;
+	border: 1px solid #CCC;
+}
+
+.ssp-table-filter table
+{
+	float: right;
+}
+
+#tableRequests
+{
+	width: 99.5%;
+	height: 550px;
+}
+
+
+/* View Ticket */
+.ssp-content-body .ui-accordion {
+	width: 96%;
+	margin: 15px auto;
+}
+
+.panelAddProgress {
+	height: 340px;
+}
+
+.table-ticket-info
+{
+	width: 100%;
+	margin: auto;
+}
+
+.ticket-desc-text
+{
+	width: 1080px;
+	height: 18px;
+}
+
+.ticket-desc-readmore-button
+{
+	float: right;
+	bottom: 2px;
+	right: -5px;
+}
+
+.ticket-desc-scroll-panel
+{
+	width: 596px;
+	height: 290px;
+	padding: 10px;
+	text-align: justify;
+	white-space: pre-line;
+	border: 1px solid gray;
+}
+
+/* Ticket Options Toolbar */
+.ssp-ticket-tools
+{
+	width: 99%;
+	margin: 10px auto;
+	color: #4f4f4f;
+	font-family: Arial,sans-serif;
+}
+
+.ui-toolbar-group-left .ui-icon, .ui-state-default, .ui-state-hover
+{
+	background-image: none;
+}

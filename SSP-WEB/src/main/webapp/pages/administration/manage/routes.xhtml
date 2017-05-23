@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+       	<f:event type="preRenderView" listener="#{routesMBean.preRenderEvents}" />
+	</f:metadata>
+
+	<ui:define name="ssp-content-area">
+				
+		<div class="ssp-content-header">
+			<ui:include src="../template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.ssp_admin_header_manage_routes}" />
+				<ui:param name="locationUrl" value="\/\#" />
+			</ui:include>
+		</div>
+		<div class="ssp-content-body-no-border">
+			
+			<p:panel id="addRoutePanel" styleClass="panel_fields">
+				<h:form id="addRouteForm">
+				
+					<ui:include src="../template/blockui.xhtml" />
+		     
+					<p:panelGrid id="addRouteFormGrid" styleClass="form-grid" cellpadding="5">
+						<p:row>
+							<p:column colspan="2">
+								<h4 class="text-blue">
+									<h:outputText value="#{msgs.ssp_label_admin_routes_tickets_from}" />
+								</h4>
+							</p:column>
+							<p:column rowspan="3" width="2%">
+								<div class="ssp-vertical-line" />
+							</p:column>
+							<p:column colspan="2">
+								<h4 class="text-blue">
+									<h:outputText value="#{msgs.ssp_label_admin_routes_treated_by}" />
+								</h4>
+							</p:column>
+							<p:column rowspan="3" width="2%">
+								<div class="ssp-vertical-line" />
+							</p:column>
+						</p:row>						
+						<p:row>
+							<p:column width="15%">
+								<h:outputLabel value="#{msgs.ssp_label_product} *" for="productField"></h:outputLabel>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="productField" name="Produto" value="#{routesMBean.route.product}" style="width:310px;" 
+												 required="true" requiredMessage="#{msgs.ssp_validation_required_product}" >
+									<p:ajax event="change" listener="#{routesMBean.loadCategories}" update="categoryField" process="@this" />
+									<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+									<f:selectItems value="#{routesMBean.availableProducts}" var="_product" itemValue="#{_product}" itemLabel="#{_product.name}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:outputLabel for="groupField" value="#{msgs.ssp_label_group}" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="groupField" name="Grupo" value="#{routesMBean.route.supportGroup}" 
+												 required="true" requiredMessage="#{msgs.ssp_validation_required_group}" style="width:310px;" >
+									<p:ajax event="change" listener="#{routesMBean.loadAnalysts}" update="analistaField" process="@this" />
+									<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+									<f:selectItems value="#{routesMBean.availableGroups}" var="_group" itemValue="#{_group}" itemLabel="#{_group.name}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:commandButton id="btnAddRoute" value="#{msgs.ssp_button_add}" 
+												 action="#{routesMBean.saveRoute()}" ajax="false"
+												 style="width: 100px;" />
+							</p:column>
+						</p:row>						
+						<p:row>
+							
+							<p:column width="15%">
+								<h:outputLabel value="#{msgs.ssp_label_category}" for="categoryField"></h:outputLabel>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="categoryField" value="#{routesMBean.route.category}" style="width:310px;" >
+									<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue=""></f:selectItem>
+									<f:selectItems value="#{routesMBean.availableCategories}" var="_categ" itemValue="#{_categ}" itemLabel="#{_categ.name}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:outputLabel for="analistaField" value="#{msgs.ssp_label_analyst}" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="analistaField" name="analista" value="#{routesMBean.route.supportAnalyst}" style="width:310px;" >
+									<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+									<f:selectItems value="#{routesMBean.availableAnalysts}" var="_analyst" itemValue="#{_analyst}" itemLabel="#{_analyst}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column width="20%" styleClass="text-align: center;" >
+								<p:commandButton id="btnCancel" value="#{msgs.ssp_button_cancel}" 
+								 	             actionListener="#{routesMBean.reset()}" update=":addRouteForm" 
+								 	             resetValues="true" process="@this" style="width: 100px;" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+		    </p:panel>
+		    
+		    <p:panel id="routesPanel" styleClass="panel_results">
+		    	<h:form id="routesForm">
+			    	<p:dataTable id="tableRoutes" var="_route" value="#{routesMBean.availableRoutes}"
+						 rowKey="#{_route.id}" selectionMode="single" 
+						 scrollable="true" scrollHeight="334" rowIndexVar="rowIndex"
+						 rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}"
+						 emptyMessage="#{routesMBean.emptyTableMessage}" 
+						 sortBy="#{_route.id}" >
+										
+					    <p:column headerText="#{msgs.ssp_header_id}" sortBy="#{_route.id}" style="width:6%">
+					        <h:outputText value="#{_route.id}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_product}" sortBy="#{_route.product}" style="width:22%">
+					        <h:outputText value="#{_route.product.name}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_category}" sortBy="#{_route.category}" style="width:22%">
+					        <h:outputText value="#{_route.category.name}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_admin_header_responsible_group}" sortBy="#{_route.supportGroup}" style="width:22%">
+					        <h:outputText value="#{_route.supportGroup.name}" />
+					    </p:column>
+					    
+					     <p:column headerText="#{msgs.ssp_admin_header_responsible_analyst}" sortBy="#{_route.supportAnalyst}" style="width:22%">
+					        <h:outputText value="#{_route.supportAnalyst.toString()}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_options}" style="text-align: center;">
+					    	<p:commandButton id="btnDelete" icon="fa fa-trash-o" styleClass="ssp_in_row_button" 
+					    					 title="#{msgs.ssp_tootip_delete_record}" >
+					    					 
+					    		<p:confirm header="#{msgs.ssp_message_confirm_delete_title}" 
+			               				   message="#{msgs.ssp_message_confirm_delete}" 
+			               				   icon="ui-icon-question" /> 				 
+					    		
+				    			<p:ajax process="@this" listener="#{routesMBean.deleteRoute(_route)}" update=":routesForm" />
+					    					
+					    	</p:commandButton>
+					    </p:column>
+					   	
+					</p:dataTable>
+				</h:form>
+			</p:panel>
+		    
+		</div>
+    </ui:define>
+</ui:composition>

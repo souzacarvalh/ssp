@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<title>
+			<h:outputText value="#{msgs.ssp_application_title}"></h:outputText>
+		</title>
+		<link rel="shortcut icon" href="#{resource['ssp-web-res/images/icons/favicon.ico']}" type="image/x-icon" />
+		<h:outputStylesheet library="ssp-web-res" name="css/main-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="css/support-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="lib/font-awesome-4.2.0/css/font-awesome.css" />
+		<h:outputScript library="ssp-web-res" name="js/ssp-functions.js"></h:outputScript>
+	</h:head>
+	<body>
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{loginMBean.checkUserIsAuthenticatedAndRedirect}" />
+		</f:metadata>
+	
+		<div id="mainContainerIndex">
+		
+			<p:growl id="loginGrowlDialog" life="8000" autoUpdate="true" />
+		
+			<div class="header-tool-bar index-toolbar">
+				<h:form id="form-header-options">
+					<ul>
+						<li>
+							<i class="fa fa-wrench"></i>
+							 <h:commandLink value="#{msgs.ssp_button_administration}" action="#{navigation.redirectToAdministrationIndexPage}" />
+						</li>
+						<li>|</li>
+						<li>
+							<i class="fa fa-unlock-alt"></i>
+							<h:commandLink value="#{msgs.ssp_button_forgot_pass}" />
+						</li>
+					</ul>
+				</h:form>
+			</div>
+			<div id="index-login-messages">
+		  		<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+		  	</div>
+			<div id="index-logo">
+				<h:graphicImage library="ssp-web-res" name="images/logo.png"></h:graphicImage>
+			</div>
+			<div id="index-login-area">
+				<div id="index-login-fields">
+					<h:form id="formLogin" >	
+					
+						<p:focus context="login-grid" />
+											
+						<p:panelGrid id="login-grid">
+							<p:row>  
+				       			<p:column><h:outputLabel for="usuario" value="#{msgs.ssp_label_user}" /></p:column>
+				       			<p:column>
+				       				<p:inputText id="usuario" value="#{loginMBean.username}" required="true" requiredMessage="#{msgs.ssp_validation_required_username}"  />
+				       			</p:column>
+				       		</p:row>
+				       		<p:row>
+				       			<p:column><h:outputLabel for="senha" value="#{msgs.ssp_label_password}" /></p:column>
+				       			<p:column>
+				       				<p:password id="senha" value="#{loginMBean.password}" required="true" requiredMessage="#{msgs.ssp_validation_required_password}" />
+				       			</p:column>
+				       		</p:row>
+				       		<p:row>
+				       			<p:column style='vertical-align:bottom;'>
+				       				<h:selectBooleanCheckbox id="manterConectado" value="#{loginMBean.keepMeConnected}" />
+				       				<h:outputLabel for="manterConectado" value="#{msgs.ssp_label_keep_conected}" styleClass="ssp-small-text" />
+				       			</p:column>
+				       			<p:column style='text-align:right;'> 
+				       				<p:commandButton value="Login" styleClass="ssp-cmd-button" action="#{loginMBean.doLogin}" update="login-grid">
+				       					<f:param name="context" value="support" />
+				       					<f:actionListener type="org.ffsc.ssp.web.security.SSPAuthenticationListener" />
+				       				</p:commandButton>
+				       			</p:column>
+				       		</p:row>
+				       	</p:panelGrid>
+				    </h:form>
+			    </div>
+			</div>
+			<div id="index-version">
+				<h:outputText value="#{msgs.ssp_module_support_version_txt} "></h:outputText>
+				<h:outputText value="#{initParam['moduleSupportVersion']}"></h:outputText>
+			</div>
+			
+			<div id="index-watermark">
+				<h:graphicImage library="ssp-web-res" name="images/watermark-support.png"></h:graphicImage>
+			</div>
+			
+			<div id="index-footer">
+				<div class="index-footer-content">
+					<h:outputText value="#{msgs.ssp_application_bottom}"></h:outputText>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

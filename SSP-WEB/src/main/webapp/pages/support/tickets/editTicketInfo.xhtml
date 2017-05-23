@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/dialog.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+		<f:viewParam name="ticket" value="#{treatmentMBean.ticket}" />
+		<f:event type="preRenderView" listener="#{treatmentMBean.loadCategories}" />
+	</f:metadata>
+			
+	<ui:define name="ssp-dialog-title" >
+		<title>
+			<h:outputText value="#{msgs.ssp_header_edit_ticket_info}" />
+		</title>
+	</ui:define>
+		
+	<ui:define name="ssp-dialog-content">
+	
+		<p:panelGrid id="formGrid" styleClass="form-grid" cellpadding="5" style="width:98%;">
+			<p:row>
+				<p:column style="width:25%;">
+					<h:outputLabel value="#{msgs.ssp_label_status}" for="statusField"></h:outputLabel>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="statusField" value="#{treatmentMBean.ticket.status}" itemValue="#{treatmentMBean.ticket.status}" 
+									 required="true" requiredMessage="#{msgs.ssp_validation_required_status}">
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="" /> 
+						<f:selectItems value="#{ticketMBean.availableStatus}" var="_status" itemValue="#{_status}" itemLabel="#{_status.name}" />
+					</p:selectOneMenu>
+					<span class="ssp-hint-button">
+						<p:commandLink id="statusHintLink">
+							<i class="fa fa-lightbulb-o fa-5"></i>
+						</p:commandLink>
+					</span>		
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<h:outputLabel value="#{msgs.ssp_label_product} *" for="productField"></h:outputLabel>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="productField" name="Produto" value="#{treatmentMBean.ticket.product}" style="width:310px;" 
+							required="true" requiredMessage="#{msgs.ssp_validation_required_product}" >
+						<p:ajax event="change" listener="#{treatmentMBean.loadCategories}" update="categoryField" process="@this" resetValues="true" />
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+						<f:selectItems value="#{ticketMBean.availableProducts}" var="_product" itemValue="#{_product}" itemLabel="#{_product.name}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<h:outputLabel value="#{msgs.ssp_label_category} *" for="categoryField"></h:outputLabel>
+				</p:column>
+				<p:column colspan="3">
+					<p:selectOneMenu id="categoryField" value="#{treatmentMBean.ticket.category}" style="width:310px;" 
+							required="true" requiredMessage="#{msgs.ssp_validation_required_category}">
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="" />
+						<f:selectItems value="#{treatmentMBean.availableCategories}" var="_categ" itemValue="#{_categ}" itemLabel="#{_categ.name}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<h:outputLabel value="#{msgs.ssp_label_priority} *" for="priorityField"></h:outputLabel>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="priorityField" value="#{treatmentMBean.ticket.priority}" style="width:310px;"
+							required="true" requiredMessage="#{msgs.ssp_validation_required_priority}" >
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue=""></f:selectItem>
+						<f:selectItems value="#{ticketMBean.availablePriorities}" var="_priority" itemValue="#{_priority}" itemLabel="#{_priority.name}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>&nbsp;</p:column>
+				<p:column>
+					<p:selectBooleanCheckbox itemLabel="#{msgs.ssp_label_redirect_ticket}" 
+							value="#{treatmentMBean.ticket.treatmentInfo.shouldRedirect}" />
+					
+					<span class="ssp-hint-button">
+						<p:commandLink id="redirectHintLink">
+							<i class="fa fa-lightbulb-o fa-5"></i>
+						</p:commandLink>
+					</span>		
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="statusField" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="productField" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="categoryField" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="priorityField" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+		<p:panelGrid cellpadding="5" styleClass="form-buttons-dialog" style="position: absolute; top:350px;">
+			<p:row>
+				<p:column>
+					<p:commandButton id="btnSaveTicketEdition" value="#{msgs.ssp_button_save}" 
+									 styleClass="form-button" action="#{treatmentMBean.saveTicketChanges}" >
+	
+						<p:confirm header="#{msgs.ssp_header_support}" message="#{msgs.message_confirm_ticket_changes}" 
+		               			   	icon="ui-icon-question" />
+	
+						<p:ajax process=":dialogForm" onstart="PF('bui').show();" oncomplete="PF('bui').hide();"
+								update=":dialogForm:formGrid" />
+								
+					</p:commandButton>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+		
+		<!-- Ticket Editing Hints -->
+		<p:overlayPanel id="statusHintPanel" for="statusHintLink" hideEffect="fade" styleClass="ssp-hint clear-left-margin" 
+					    appendToBody="true" dismissable="true">
+			<h:outputText value="Alterar o status do chamado poderá causar o encerramento do mesmo, por exemplo, alterando o status 
+								 para 'Resolvido' ou 'Cancelado'"  />  
+		</p:overlayPanel>
+		
+		<p:overlayPanel id="redirectHintPanel" for="redirectHintLink" hideEffect="fade" styleClass="ssp-hint clear-left-margin" 
+					    appendToBody="true" dismissable="true">
+			<h:outputText value="Se você deseja que o chamado seja roteado para atendimento de acordo com o produto/categoria
+								 informado marque esta opção"  />  
+		</p:overlayPanel>
+		
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/dialog.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+		<f:viewParam name="ticket" value="#{treatmentMBean.ticket}" />
+	</f:metadata>
+			
+	<ui:define name="ssp-dialog-title" >
+		<title>
+			<h:outputText value="#{msgs.ssp_header_transf_ticket}" />
+		</title>
+	</ui:define>
+	
+	<ui:define name="ssp-dialog-content">
+
+		<p:panelGrid id="formGrid" styleClass="form-grid" cellpadding="5">
+			<p:row>
+				<p:column>
+					<p:outputLabel for="groupField" value="#{msgs.ssp_label_group}" />
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="groupField" name="Grupo" value="#{treatmentMBean.ticket.treatmentInfo.supportGroup}" 
+									 required="true" requiredMessage="#{msgs.ssp_validation_required_group}" style="width:310px;" >
+						<p:ajax event="change" listener="#{treatmentMBean.loadAnalysts}" update="analistaField" process="@this" />
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+						<f:selectItems value="#{treatmentMBean.availableGroups}" var="_group" itemValue="#{_group}" itemLabel="#{_group.name}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel for="analistaField" value="#{msgs.ssp_label_analyst}" />
+				</p:column>
+				<p:column>
+					<p:selectOneMenu id="analistaField" name="analista" 
+									 value="#{treatmentMBean.ticket.treatmentInfo.supportAnalyst}" 
+									 style="width:310px;" >
+						<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue="#{null}" />
+						<f:selectItems value="#{treatmentMBean.availableAnalysts}" var="_analyst" 
+											itemValue="#{_analyst}" itemLabel="#{_analyst}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="groupField" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+				
+		<p:panelGrid cellpadding="5" styleClass="form-buttons-dialog" style="position: absolute; top: 152px;">
+			<p:row>
+				<p:column>
+					<p:commandButton id="btnTransferTicket" value="#{msgs.ssp_button_transfer_ticket}" 
+									 styleClass="form-button" action="#{treatmentMBean.transferTicket}" >
+	
+						<p:ajax process=":dialogForm" onstart="PF('bui').show();" oncomplete="PF('bui').hide();"
+								update=":dialogForm:formGrid" />
+								
+					</p:commandButton>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+			    
+	</ui:define>
+</ui:composition>

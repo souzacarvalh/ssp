@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="SSP-Web" xmlns="http://logging.apache.org/log4j/2.0/config" >
+	<Properties>
+    	<Property name="arquivo">C:/ssp-web.log</Property>
+  	</Properties>
+	<appenders>
+		<Console name="CONSOLE-WEB" target="SYSTEM_OUT">
+      		<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+    	</Console>
+    	<RollingFile name="FILE-WEB" fileName="${arquivo}" filePattern="ssp-web-%d{MM-dd-yyyy}-%i.log.gz">
+	     	<PatternLayout>
+	        	<pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+	      	</PatternLayout>
+	      	 <Policies>
+		        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		        <SizeBasedTriggeringPolicy size="20 MB"/>
+		     </Policies>
+	    </RollingFile>
+    </appenders>
+    <Loggers>
+    	<Logger name="org.ffsc..ssp.web" level="debug" additivity="false">
+      		<AppenderRef ref="FILE-WEB"/>
+   		</Logger>
+	    <Root level="debug">
+	      <AppenderRef ref="CONSOLE-WEB"/>
+	    </Root>
+  	</Loggers>
+</Configuration>

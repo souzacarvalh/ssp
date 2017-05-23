@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		
+		<ui:insert name="ssp-dialog-title" >
+			<title>
+				<h:outputText value="#{msgs.application_title}" />
+			</title>
+		</ui:insert>
+
+		<h:outputStylesheet library="ssp-web-res" name="css/main-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="css/customer-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="lib/font-awesome-4.2.0/css/font-awesome.css" />
+		<h:outputScript library="ssp-web-res" name="js/ssp-functions.js"></h:outputScript>
+	</h:head>
+	<h:body id="mainContainerDialog" styleClass="ssp-dialog-body">
+	
+		<h:form id="dialogForm">
+    
+    		<p:growl id="formGrowlDialog" life="4000" autoUpdate="false" />
+	
+			<p:blockUI id="blockUI" widgetVar="bui" block=":mainContainerDialog">
+				<h:graphicImage library="ssp-web-res" name="images/loader.gif" />
+			</p:blockUI>
+			
+			<p:ajaxStatus onstart="PF('bui').show()" onsuccess="PF('bui').hide()" />
+	
+			<ui:insert name="ssp-dialog-content" >
+			
+			</ui:insert>
+			
+		</h:form>
+		
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode" styleClass="ssp-confirm-dialog" width="430px" appendTo="@(mainContainer)" >
+        	<p:commandButton value="#{msgs.message_button_yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        	<p:commandButton value="#{msgs.message_button_no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    	</p:confirmDialog>
+		
+	</h:body>
+</html>

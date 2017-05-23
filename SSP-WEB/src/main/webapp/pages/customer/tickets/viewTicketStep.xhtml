@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/dialog.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+		<f:viewParam name="ticketStep" value="#{ticketStepMBean.step}" />
+	</f:metadata>
+	
+	<ui:define name="ssp-dialog-title" >
+		<title>
+			<h:outputFormat value="#{msgs.header_view_step}" >
+				<f:param value="#{ticketStepMBean.step.id}" />
+			</h:outputFormat>
+		</title>
+	</ui:define>
+	
+	<ui:define name="ssp-dialog-content">
+	    
+       	<p:tabView styleClass="panelAddStep">
+       		<p:tab title="#{msgs.tab_request_info}">
+				<h:form>
+					<p:panelGrid id="formGrid" styleClass="form-grid" cellpadding="5">
+						<p:row>
+							<p:column>
+								<h:outputLabel value="#{msgs.label_date}" for="ticketStepDate" />
+							</p:column>
+							<p:column>
+								<p:inputText id="ticketStepDate" value="#{ticketStepMBean.stepDate}" size="10" disabled="true" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="width: 120px;">
+								<h:outputLabel value="#{msgs.label_added_by}" for="addedBy" />
+							</p:column>
+							<p:column>
+								<p:inputText id="addedBy" value="#{ticketStepMBean.openedBy}" size="20" disabled="true" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<h:outputLabel value="#{msgs.label_description} *" for="ticketStepDescription" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:inputTextarea rows="9" cols="80" id="ticketStepDescription" 
+												value="#{ticketStepMBean.step.description}" required="true" 
+												requiredMessage="#{msgs.validation_required_description}"
+												readonly="true" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:message for="ticketStepDescription" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</p:tab>
+			<p:tab title="#{msgs.tab_request_attachments}">
+			    				
+		   		<p:scrollPanel mode="native" styleClass="ssp-attach-list-scroll-panel">
+					
+						<p:dataTable id="sspTicketProgressAttachList" var="_attachment" value="#{ticketStepMBean.step.attachments}"
+							emptyMessage="#{msgs.message_attachments_not_found_step}"
+							rowIndexVar="rowIndex" rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}" >
+					    	
+			    			<p:column headerText="#{msgs.label_file}">
+			    				<h:commandLink value="#{_attachment.filename}" styleClass="decorated-link"
+			    					action="#{ticketStepMBean.attachmentMBean.download(_attachment)}" target="_parent" />
+			    			</p:column>
+			    			
+			    			<p:column headerText="#{msgs.label_file_size}" style="width: 15%; text-align: center;">
+			    				<h:outputText value="#{_attachment.size}">
+			    					<f:converter converterId="fileSizeConverter" />
+			    				</h:outputText>
+			    			</p:column>
+					    </p:dataTable>
+					
+				</p:scrollPanel>
+			
+			</p:tab>
+		</p:tabView>
+		
+		<p:panelGrid cellpadding="5" styleClass="form-buttons-dialog">
+			<p:row>
+				<p:column>
+					<p:commandButton value="#{msgs.button_close}" action="#{ticketMBean.closeDialog()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+		
+	</ui:define>
+</ui:composition>

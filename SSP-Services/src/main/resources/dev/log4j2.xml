@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="SSP-Services">
+	<Properties>
+    	<Property name="arquivo">C:/ssp-service.log</Property>
+  	</Properties>
+	<appenders>
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+      		<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+    	</Console>
+    	<RollingFile name="FILE" fileName="${arquivo}" filePattern="ssp-service-%d{MM-dd-yyyy}-%i.log.gz">
+	     	<PatternLayout>
+	        	<pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+	      	</PatternLayout>
+	      	 <Policies>
+		        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		        <SizeBasedTriggeringPolicy size="20 MB"/>
+		     </Policies>
+	    </RollingFile>
+    </appenders>
+    <Loggers>
+    	<Logger name="org.ffsc.ssp.service" level="debug" additivity="false">
+      		<AppenderRef ref="FILE"/>
+   		</Logger>
+	    <Root level="debug">
+	      <AppenderRef ref="CONSOLE"/>
+	    </Root>
+  	</Loggers>
+</Configuration>

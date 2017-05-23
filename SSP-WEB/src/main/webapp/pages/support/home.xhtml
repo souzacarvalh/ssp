@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="ssp-content-area">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{taskListMBean.preRenderEvents}" />
+		</f:metadata>
+	
+		<p:growl id="homeGrowlDialog" life="4000" autoUpdate="true" showDetail="true" />
+			
+		<div class="ssp-content-header">
+			<ui:include src="template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.ssp_label_my_assignments}" />
+				<ui:param name="locationUrl" value="\/\#" />
+			</ui:include>
+		</div>
+		<div class="ssp-content-body-no-border">
+			<p:dataTable id="tableRequests" var="_treatmentTask" value="#{taskListMBean.treatmentTaskList}"
+					 rowKey="#{_treatmentTask.ticket.id}" selectionMode="single" 
+					 scrollable="true" scrollHeight="420" rowIndexVar="rowIndex"
+					 rowStyleClass="#{taskListMBean.getRowColorIndicator(rowIndex)}" 
+					 emptyMessage="#{taskListMBean.emptyTableMessage}" 
+					 sortBy="#{_treatmentTask.ticket.id}" sortOrder="descending">
+				
+				<f:facet name="header">
+		            <h:outputText value="#{msgs.ssp_header_requests}" />
+		        </f:facet>
+				
+			    <p:column headerText="#{msgs.ssp_header_id}" sortBy="#{_treatmentTask.ticket.id}" style="width:5%">
+			        <h:outputText value="#{_treatmentTask.ticket.id}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.ssp_header_title}" sortBy="#{_treatmentTask.ticket.title}" 
+			    			styleClass="ssp-column-single-line">
+			        <h:outputText value="#{_treatmentTask.ticket.title}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.ssp_header_status}" sortBy="#{_treatmentTask.ticket.status.name}" 
+			    			styleClass="ssp-column-single-line ssp-text-center" style="width:10%;" >
+			        <h:outputText value="#{_treatmentTask.name.status.name}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.ssp_header_product}" sortBy="#{_treatmentTask.ticket.product.name}" 
+			    			styleClass="ssp-column-single-line ssp-text-center" style="width:13%" >
+			        <h:outputText value="#{_treatmentTask.ticket.product.name}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.ssp_header_open_date}" sortBy="#{_treatmentTask.ticket.openDate}" 
+			    			styleClass="ssp-text-center" style="width:12%;">
+			        <h:outputText value="#{_treatmentTask.ticket.openDate}">
+			        	<f:convertDateTime pattern="#{msgs.ssp_pattern_datetime}" />
+			        </h:outputText>
+			    </p:column>
+			    			    
+			    <p:column headerText="#{msgs.ssp_header_responsible}" styleClass="ssp-column-single-line ssp-text-center" style="width:16%;">
+			           <h:outputText value="#{not empty _treatmentTask.ticket.treatmentInfo.supportAnalyst
+			        							? _treatmentTask.ticket.treatmentInfo.supportAnalyst.toString()
+			        							: msgs.ssp_label_not_assigned}"  />
+			    </p:column>
+			    
+			   	<p:column headerText="SLA" styleClass="ssp-column ssp-column-single-line" style="width:5%;">
+			    	<p:graphicImage library="ssp-web-res" name="#{taskListMBean.getSLAIndicator(_treatmentTask)}" />	      
+			    </p:column>
+			    
+			    <f:facet name="footer">
+			    	 <h:outputFormat value="#{msgs.ssp_service_request_qty}">
+			    	 	<f:param value="#{taskListMBean.treatmentTaskList.size()}" />
+			    	 </h:outputFormat>
+			   	</f:facet>
+			   	
+			   	<p:ajax event="rowDblselect" listener="#{taskListMBean.viewTicket}" />
+			   	
+			</p:dataTable>
+						
+			<div class="ssp-table-filter">
+				<h:form id="formStatusFilter">
+				
+					<p:blockUI id="blockUI" widgetVar="bui" block=":mainContainer">
+					    <h:graphicImage library="ssp-web-res" name="images/loader.gif" />
+					</p:blockUI>
+				
+					<p:panelGrid id="statusFilterGrid" styleClass="form-grid" cellpadding="5">								
+						<p:row>
+							<p:column>
+								<h:outputLabel value="#{msgs.ssp_label_status_filter}" for="statusFilter" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="statusFilter" value="#{taskListMBean.statusFilter}" style="width:150px;" >
+									<f:selectItem itemLabel="#{msgs.ssp_label_all}" itemValue="" />
+									<f:selectItems value="#{taskListMBean.availableStatus}" var="_status" itemValue="#{_status}" itemLabel="#{_status.nome}" />
+									<p:ajax process="@this" listener="#{taskListMBean.filterTaskListByStatus}" event="change" 
+											onstart="PF('bui').show();" oncomplete="PF('bui').hide();" update=":tableRequests"  />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</div>
+			
+			<!-- Refresh automatically the task list from time to time -->
+			<h:form id="pollTicketsForm" style="display: none;">			    
+			    <p:poll interval="60" update=":tableRequests" />
+			    
+			    <p:ajaxStatus onstart="PF('bui').show()" onsuccess="PF('bui').hide()" />
+			    
+			    <p:blockUI id="blockUI" widgetVar="bui" block=":mainContainer">
+					<h:graphicImage library="ssp-web-res" name="images/loader.gif" />
+				</p:blockUI>
+			</h:form>
+			
+		</div>
+    </ui:define>
+</ui:composition>

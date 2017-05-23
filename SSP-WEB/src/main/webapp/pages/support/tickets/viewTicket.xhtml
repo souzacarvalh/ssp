@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+		<f:metadata>
+			<f:viewParam name="ticket" value="#{ticketMBean.ticket}" />
+			<f:viewParam name="ticket" value="#{treatmentMBean.ticket}" />
+			<f:viewParam name="ticket" value="#{ticketStepMBean.step.ticket}" />
+			<f:event type="preRenderView" listener="#{ticketMBean.preRenderEvents}" />
+		</f:metadata>
+		    										 			 
+		<ui:define name="ssp-content-area">
+		
+			<div class="ssp-content-header">
+				<ui:include src="../template/breadcrumb.xhtml">
+					<ui:param name="locationLabel" value="#{msgs.ssp_label_view_ticket}" />
+					<ui:param name="locationUrl" value="\/\#" />
+				</ui:include>
+			</div>
+
+			<div class="ssp-content-body">
+			
+				<!-- Toolbar -->
+				<ui:include src="ticketToolbarInternal.xhtml" />
+				
+				<p:accordionPanel id="accordion" binding="#{ticketMBean.accordion}">
+					<p:tab title="#{msgs.ssp_label_ticket.concat(ticketMBean.ticket.id)}">
+					
+						<p:panel header="#{msgs.ssp_tab_request_info}">
+							<div class="panel-ticket-info">
+								<p:panelGrid cellpadding="2" styleClass="table-ticket-info"
+												rowIndexVar="rowIndex" rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}">
+									<p:row>
+										<p:column style="width:150px;" ><h:outputText value="#{msgs.ssp_label_dt_create}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.requestDate}" /></p:column>
+									</p:row>										
+									<p:row>
+										<p:column>
+											<h:outputText value="#{msgs.ssp_label_status}" />
+										</p:column>
+										<p:column styleClass='#{ticketMBean.getStyleStatusColumn()}'>
+											<h:outputText value="#{ticketMBean.ticket.status.name}" />
+											<h:outputFormat value=" [{0}]" rendered='#{ticketMBean.ticket.closed}'>
+												<f:param value="#{ticketMBean.closeDate}" />
+											</h:outputFormat>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.ssp_label_requestor}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.requester}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.ssp_label_ticket_title}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.title}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.ssp_label_priority}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.priority.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.ssp_label_product}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.product.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.ssp_label_category}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.category.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2"><h:outputText value="#{msgs.ssp_label_description}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">
+											<div class="ticket-desc-text truncated">
+												<h:outputText value="#{ticketMBean.ticket.description}" />
+											</div>
+											<p:commandButton id="buttonIniAtendimento" title="#{msgs.ssp_button_read_more}" 
+				   								 icon="fa fa-eye" alt="#{msgs.ssp_button_read_more}" 
+				   								 styleClass="ticket-desc-readmore-button"
+				   								 actionListener="#{ticketMBean.openTicketDetailsoDialog()}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</div>
+						</p:panel>
+						
+					</p:tab>
+					<p:tab title="#{msgs.ssp_tab_request_attachments}">
+						<p:scrollPanel mode="native" styleClass="ssp-attach-list-scroll-panel">
+							<h:form id="ticketAttachments">
+								<p:dataTable id="sspTicketAttachList" var="_attachment" value="#{ticketMBean.ticket.attachments}"
+									emptyMessage="#{msgs.ssp_ticket_attach_empty_table}"
+									rowIndexVar="rowIndex" rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}" >
+							    	
+					    			<p:column headerText="#{msgs.ssp_label_file}">
+					    				<h:commandLink value="#{_attachment.filename}" styleClass="decorated-link"
+					    					action="#{ticketMBean.attachmentMBean.download(_attachment)}" />
+					    			</p:column>
+					    			
+					    			<p:column headerText="#{msgs.ssp_label_file_size}" style="width: 10%; text-align: center;">
+					    				<h:outputText value="#{_attachment.size}">
+					    					<f:converter converterId="fileSizeConverter" />
+					    				</h:outputText>
+					    			</p:column>
+							    </p:dataTable>
+							</h:form>
+						</p:scrollPanel>
+						
+					</p:tab>
+					<p:tab title="#{msgs.ssp_tab_request_progress}">
+						<p:dataTable id="tableAndamentos" var="_step" value="#{ticketMBean.sortedSteps}"
+				 				rowKey="#{_step.id}" sortBy="#{_step.id}" sortOrder="descending"
+				 				scrollable="true" scrollHeight="320" rowIndexVar="rowIndex"
+				 				rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}"
+				 				emptyMessage="#{msgs.ssp_ticket_progress_empty_table}" >
+			
+							<p:column headerText="#{msgs.ssp_header_date}" sortBy="#{_step.date}" style="width:12%"
+									  styleClass="#{_step.internal ? 'orange' : null}" >
+						        <h:outputText value="#{_step.date}">
+						        	<f:convertDateTime pattern="#{msgs.ssp_pattern_datetime}" type="both"  />
+						        </h:outputText>
+						    </p:column>
+						        
+						    <p:column headerText="#{msgs.ssp_header_description}" sortBy="#{_step.description}" styleClass="truncated" >
+						        <p:commandLink actionListener="#{ticketStepMBean.viewStep(_step.id)}" 
+						        			   style="#{_step.internal ? 'color: #FF8C00' : ''}" >
+						        	<h:outputText value="#{_step.description}" />
+						        </p:commandLink>
+						    </p:column>
+						    
+						    <p:column headerText="#{msgs.ssp_header_added_by}" sortBy="#{_step.openedBy}" style="width:15%"
+						    		  styleClass="#{_step.internal ? 'orange' : null}">
+						        <h:outputText value="#{_step.openedBy}" />
+						    </p:column>
+
+						    <p:column style="width:5%; text-align: center;">
+						    
+						    	<f:facet name="header">
+						    		<i class="fa fa-clip" />
+						    	</f:facet>
+						    
+						        <h:graphicImage library="ssp-web-res" name="images/icons/attachment.png" 
+						        				alt="#{msgs.ssp_label_attachment_present}" 
+						        				title="#{msgs.ssp_label_attachment_present}" 
+						        				rendered="#{not empty _step.attachments}" />
+						  	</p:column>
+						
+						</p:dataTable>
+					</p:tab>
+				</p:accordionPanel>
+			</div>
+		</ui:define>
+</ui:composition>

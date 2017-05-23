@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/dialog.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+		<f:viewParam name="ticket" value="#{ticketMBean.ticket}" />
+	</f:metadata>
+			
+	<ui:define name="ssp-dialog-title" >
+		<title>
+			<h:outputText value="#{msgs.header_cancel_ticket}" />
+		</title>
+	</ui:define>
+	
+	<ui:define name="ssp-dialog-content">
+
+		<p:panelGrid id="formGrid" styleClass="form-grid" cellpadding="5">
+			<p:row>
+				<p:column colspan="2">
+					<p:inputTextarea rows="8" cols="66" id="ticketCancelReason" 
+									value="#{ticketMBean.ticket.cancelReason}" required="true" 
+									requiredMessage="#{msgs.validation_required_reason}" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:message for="ticketCancelReason" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+				
+		<p:panelGrid cellpadding="5" styleClass="form-buttons-dialog" style="position: absolute; top: 195px;">
+			<p:row>
+				<p:column>
+					<p:commandButton id="btnCancelTicket" value="#{msgs.button_cancel_ticket_confirm}" 
+									 styleClass="form-button" action="#{ticketMBean.cancelTicket}" >
+						
+						<p:confirm header="#{msgs.label_cancel}" message="#{msgs.message_confirm_ticket_cancel}" 
+              			   		   icon="ui-icon-question" />
+						  	
+						<p:ajax process=":dialogForm" onstart="PF('bui').show();" oncomplete="PF('bui').hide();"
+								update=":dialogForm:formGrid" />
+						
+					</p:commandButton>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+	</ui:define>
+</ui:composition>

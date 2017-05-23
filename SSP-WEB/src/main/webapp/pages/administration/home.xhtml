@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="ssp-content-area">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{taskListMBean.preRenderEvents}" />
+		</f:metadata>
+	
+		<p:growl id="homeGrowlDialog" life="4000" autoUpdate="true" showDetail="true" />
+			
+		<div class="ssp-content-header">
+			<ui:include src="template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.ssp_label_administration}" />
+				<ui:param name="locationUrl" value="\/\#" />
+			</ui:include>
+		</div>
+		<div class="ssp-content-body-no-border">
+			<div class="message message-warning">
+			    <h4>
+			    	<i class="fa fa-gear"></i>
+			    	<h:outputText value="#{msgs.ssp_message_admin_welcome_title}"/>
+			    </h4>
+				<h:outputText value="#{msgs.ssp_message_admin_welcome}"/>
+			 </div>
+		</div>
+    </ui:define>
+</ui:composition>

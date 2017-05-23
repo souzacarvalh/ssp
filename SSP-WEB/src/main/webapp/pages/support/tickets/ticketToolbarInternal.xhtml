@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<div class="ssp-ticket-tools">
+		<h:form id="ticketToolsForm">
+			<p:toolbar id="tools" styleClass="ticket-tools">	
+	   			<f:facet name="left">
+	   				<p:commandButton id="buttonIniAtendimento" title="#{msgs.ssp_button_start_work}" 
+	   								 icon="fa fa-headphones" 
+	   								 disabled="#{ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}"
+	   								 actionListener="#{treatmentMBean.startTreatment}">
+	   								 
+	   					<p:confirm header="#{msgs.ssp_header_support}" message="#{msgs.ssp_message_confirm_start_treatment}" 
+		               			   	icon="ui-icon-question" />
+		               						
+	   				</p:commandButton>
+	   				
+	   				<p:tooltip id="toolTipIniAtendimento" for="buttonIniAtendimento" value="#{msgs.ssp_button_start_work}" />
+	   			
+	   				<p:commandButton id="buttonAddAndamento" title="#{msgs.ssp_button_add_progress}" 
+	   								 icon="fa fa-comments"
+	   								 disabled="#{not ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}"
+	   								 actionListener="#{ticketStepMBean.openAddStepDialog}">
+	   					<p:ajax event="dialogReturn" listener="#{ticketStepMBean.onAddStep}" />
+	   				</p:commandButton>
+	   				
+	   				<p:tooltip id="toolTipAddAndamento" for="buttonAddAndamento" value="#{msgs.ssp_button_add_progress}" />
+	   				
+	   				<p:commandButton id="buttonTransferir" title="#{msgs.ssp_button_add_progress}" 
+	   								 icon="fa fa-exchange"
+	   								 disabled="#{not ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}"
+	   								 actionListener="#{treatmentMBean.openTransferDialog}">
+	   					<p:ajax event="dialogReturn" listener="#{treatmentMBean.onTransferTicket}" />
+	   				</p:commandButton>
+	   				
+	   				<p:tooltip id="toolTipTransferir" for="buttonTransferir" value="#{msgs.ssp_button_transfer_ticket}" />
+	   				
+	   				<p:commandButton id="buttonEditar" title="#{msgs.ssp_button_edit_ticket_info}" 
+	   								 icon="fa fa-pencil-square-o" 
+	   								 disabled="#{not ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}"
+	   								 actionListener="#{treatmentMBean.openEditTicketDialog}">
+	   					<p:ajax event="dialogReturn" listener="#{treatmentMBean.onSaveTicketChanges}" />
+	   				</p:commandButton>
+	   				
+	   				<p:tooltip id="toolTipEditar" for="buttonEditar" value="#{msgs.ssp_button_edit_ticket_info}" />
+	   				
+	   				<!-- Workaround: PrimeFaces 5.0 does not support menu item with ajax tag and dialog return -->
+			    	<p:commandButton id="cancelTicketButton" value="Cancel Ticket"
+	               					 actionListener="#{ticketMBean.openCancelTicketDialog}"
+	               					 disabled="#{ticketMBean.ticket.closed}" style="display: none;" >              			   			   
+		            	<p:ajax event="dialogReturn" listener="#{ticketMBean.onCancel}" />
+		            </p:commandButton>
+	   				
+	   				<span class="ui-separator">
+	            		<span class="ui-icon ui-icon-grip-dotted-vertical" />
+	         		</span>
+	   			</f:facet>
+		     	<f:facet name="right">
+		     		<p:menuButton value="#{msgs.ssp_button_more_options}">
+		               	<p:menuitem>
+		               		
+		               		<!-- Workaround: PrimeFaces 5.0 does not support menu item with global dialog yet -->
+	               			<p:commandLink styleClass="ui-menuitem-link ui-corner-all" style="font-size: 1em;" 
+	               							actionListener="#{ticketMBean.markTicketAsResolved}" ajax="false"
+	               							disabled="#{not ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}">
+	               				<h:outputText styleClass="ui-menuitem-icon ui-icon ui-icon-check" />
+        						<h:outputText styleClass="ui-menuitem-text" value="#{msgs.ssp_button_mark_solved}" />
+        						<p:confirm header="#{msgs.ssp_message_confirm_ticket_solved_title}" 
+		               					   message="#{msgs.ssp_message_confirm_ticket_solved}" 
+		               					   icon="ui-icon-question" /> 
+		               		</p:commandLink>
+		               		
+		               	</p:menuitem>
+
+		                <p:menuitem value="#{msgs.ssp_button_cancel_ticket}" icon="ui-icon-info"
+	               					disabled="#{not ticketMBean.ticket.beingTreated or ticketMBean.ticket.closed}" 
+		                			onclick="document.getElementById('ticketToolsForm:cancelTicketButton').click();" >			
+						</p:menuitem>
+				
+		               	<p:menuitem value="Voltar" icon="ui-icon ui-icon-arrowreturnthick-1-w" outcome="/pages/support/home.jsf" />
+		               	
+		           	</p:menuButton>
+		    	</f:facet>		    	
+			</p:toolbar>
+		</h:form>
+ 	</div>
+ 	
+</ui:composition>

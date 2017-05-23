@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+       	<f:event type="preRenderView" listener="#{slaConfigMBean.preRenderEvents}" />
+	</f:metadata>
+
+	<ui:define name="ssp-content-area">
+				
+		<div class="ssp-content-header">
+			<ui:include src="../template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.ssp_admin_header_manage_sla}" />
+				<ui:param name="locationUrl" value="\/\#" />
+			</ui:include>
+		</div>
+		<div class="ssp-content-body-no-border">
+			
+			<p:panel id="addSlaConfigPanel" styleClass="panel_fields">
+				<h:form id="addSlaConfigForm">
+				
+					<ui:include src="../template/blockui.xhtml" />
+		     
+					<p:panelGrid id="addSlaConfigFormGrid" styleClass="form-grid" cellpadding="5">
+						<p:row>
+							<p:column colspan="2">
+								<h4 class="text-blue">
+									<h:outputText value="#{msgs.ssp_label_admin_sla_tickets_with}" />
+								</h4>
+							</p:column>
+							<p:column rowspan="4" width="2%">
+								<div class="ssp-vertical-line" />
+							</p:column>
+							<p:column colspan="2">
+								<h4 class="text-blue">
+									<h:outputText value="#{msgs.ssp_label_admin_sla_indicators}" />
+								</h4>
+							</p:column>
+							<p:column rowspan="4" width="2%">
+								<div class="ssp-vertical-line" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputLabel value="#{msgs.ssp_label_priority} *" for="priorityField"></h:outputLabel>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="priorityField" value="#{slaConfigMBean.slaConfiguration.priority}" style="width:310px;"
+												 required="true" requiredMessage="#{msgs.ssp_validation_required_priority}" >
+									<f:selectItem itemLabel="#{msgs.ssp_label_list_placeholder}" itemValue=""></f:selectItem>
+									<f:selectItems value="#{slaConfigMBean.availablePriorities}" var="_priority" itemValue="#{_priority}" 
+												   itemLabel="#{_priority.name}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:graphicImage library="ssp-web-res" name="images/icons/sla-green.png" />	      
+							</p:column>
+							<p:column>
+								<h:outputText value="#{msgs.ssp_label_admin_on_opening}" />      
+							</p:column>
+							<p:column>
+								<p:commandButton id="btnAddSlaConfig" value="#{msgs.ssp_button_add}" 
+												 action="#{slaConfigMBean.saveRoute()}" ajax="false"
+												 style="width: 100px;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:selectBooleanCheckbox itemLabel="#{msgs.ssp_label_admin_send_email_responsible}" 
+														 value="#{slaConfigMBean.slaConfiguration.shouldAlertResponsible}" />
+							</p:column>
+							<p:column>
+								<p:graphicImage library="ssp-web-res" name="images/icons/sla-yellow.png" />	      
+							</p:column>
+							<p:column>
+								<h:outputText value="#{msgs.ssp_label_admin_after}" />      
+								<p:inputMask value="#{slaConfigMBean.slaConfiguration.warningTime}" mask="9?99" maxlength="3" style="width:40px; margin: 0 10px;" />   
+								<h:outputText value="#{msgs.ssp_label_admin_minutes}" />      
+							</p:column>
+							<p:column width="20%" styleClass="text-align: center;" >
+								<p:commandButton id="btnCancel" value="#{msgs.ssp_button_cancel}" 
+								 	             actionListener="#{slaConfigMBean.reset()}" update=":addSlaConfigForm" 
+								 	             resetValues="true" process="@this" style="width: 100px;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:selectBooleanCheckbox itemLabel="#{msgs.ssp_label_admin_send_email_manager}" 
+														 value="#{slaConfigMBean.slaConfiguration.limitTime}" />
+							</p:column>
+							<p:column>
+								<p:graphicImage library="ssp-web-res" name="images/icons/sla-red.png" />	      
+							</p:column>
+							<p:column>
+								<h:outputText value="#{msgs.ssp_label_admin_after}" />      
+								<p:inputMask value="#{slaConfigMBean.slaConfiguration.limitTime}" mask="9?99" style="width:40px; margin: 0 10px;" />   
+								<h:outputText value="#{msgs.ssp_label_admin_minutes}" />      
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+		    </p:panel>
+		    
+		    <p:panel id="slaConfigsPanel" styleClass="panel_results">
+		    	<h:form id="slaConfigsForm">
+			    	<p:dataTable id="slaConfigsTable" var="_sla" value="#{slaConfigMBean.availableSLAConfigs}"
+						 rowKey="#{_sla.id}" selectionMode="single" 
+						 scrollable="true" scrollHeight="302" rowIndexVar="rowIndex"
+						 rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}"
+						 emptyMessage="#{slaConfigMBean.emptyTableMessage}" 
+						 sortBy="#{_sla.id}" >
+										
+					    <p:column headerText="#{msgs.ssp_header_id}" sortBy="#{_sla.id}" style="width:6%; text-align: center;">
+					        <h:outputText value="#{_sla.id}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_priority}" sortBy="#{_sla.priority}" style="width:30%">
+					        <h:outputText value="#{_sla.priority.name}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_admin_warning}" sortBy="#{_sla.warningTime}" style="width:8%">
+					      	<h:outputFormat value="#{msgs.ssp_label_admin_time_minutes}">
+					     		<f:param value="#{_sla.warningTime}" />
+					     	</h:outputFormat>
+					    </p:column>
+					    
+					     <p:column headerText="#{msgs.ssp_header_admin_late}" sortBy="#{_sla.limitTime}" style="width:8%">
+					     	<h:outputFormat value="#{msgs.ssp_label_admin_time_minutes}">
+					     		<f:param value="#{_sla.limitTime}" />
+					     	</h:outputFormat>
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_admin_email_responsible}" sortBy="#{_sla.shouldAlertResponsible}" style="width:20%; text-align: center;">
+					        <h:outputText value="#{_sla.shouldAlertResponsible ? msgs.ssp_label_yes : msgs.ssp_label_no}" />
+					    </p:column>
+					    
+					     <p:column headerText="#{msgs.ssp_header_admin_email_manager}" sortBy="#{_sla.shouldAlertManager}" style="width:20%; text-align: center;">
+					        <h:outputText value="#{_sla.shouldAlertManager ? msgs.ssp_label_yes : msgs.ssp_label_no}" />
+					    </p:column>
+					    
+					    <p:column headerText="#{msgs.ssp_header_options}" style="text-align: center;">
+					    	<p:commandButton id="btnDelete" icon="fa fa-trash-o" styleClass="ssp_in_row_button" 
+					    					 title="#{msgs.ssp_tootip_delete_record}" >
+					    					 
+					    		<p:confirm header="#{msgs.ssp_message_confirm_delete_title}" 
+			               				   message="#{msgs.ssp_message_confirm_delete}" 
+			               				   icon="ui-icon-question" /> 				 
+					    		
+				    			<p:ajax process="@this" listener="#{slaConfigMBean.deleteRoute(_sla)}" update=":slaConfigsForm" />
+					    					
+					    	</p:commandButton>
+					    </p:column>
+					   	
+					</p:dataTable>
+				</h:form>
+			</p:panel>
+		    
+		</div>
+    </ui:define>
+</ui:composition>

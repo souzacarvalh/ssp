@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<title>
+			<h:outputText value="#{msgs.application_title}"></h:outputText>
+		</title>
+		<link rel="shortcut icon" href="#{resource['ssp-web-res/images/icons/favicon.ico']}" type="image/x-icon" />
+		<h:outputStylesheet library="ssp-web-res" name="css/main-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="css/customer-style.css" />
+		<h:outputStylesheet library="ssp-web-res" name="lib/font-awesome-4.2.0/css/font-awesome.css" />
+		<h:outputScript library="ssp-web-res" name="js/ssp-functions.js"></h:outputScript>
+		<ui:insert name="extra-resources-area"></ui:insert>
+	</h:head>
+	<body>
+
+		<h:panelGroup id="mainContainer" layout="block">
+				
+			<p:growl id="systemGrowlDialog" life="3000" autoUpdate="true" globalOnly="true" />
+			
+			<div id="layout-header" class="layout">
+		  		<ui:insert name="ssp-header-area">
+		  			<ui:include src="header.xhtml" />
+		  		</ui:insert>
+		  	</div>
+			<div id="layout-menu" class="layout">
+				<ui:insert name="ssp-menu-area">
+					<ui:include src="menu_left.xhtml" />
+				</ui:insert>
+			</div>
+			<div id="layout-content" class="layout">
+				<ui:insert name="ssp-content-area">
+					<h:outputText value="#{msgs.application_undefined_content}"></h:outputText>
+				</ui:insert>
+			</div>
+			<div id="layout-footer" class="layout">
+				<ui:insert name="ssp-footer-area">
+					<ui:include src="footer.xhtml" />
+				</ui:insert>
+			</div>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode" styleClass="ssp-confirm-dialog" width="430px" >
+	        	<p:commandButton value="#{msgs.message_button_yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+	        	<p:commandButton value="#{msgs.message_button_no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	    	</p:confirmDialog>
+		
+		</h:panelGroup>
+		
+	</body>
+</html>

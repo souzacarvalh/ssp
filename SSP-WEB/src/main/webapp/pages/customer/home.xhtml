@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="ssp-content-area">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{ticketsMBean.preRenderEvents}" />
+		</f:metadata>
+	
+		<p:growl id="homeGrowlDialog" life="4000" autoUpdate="true" showDetail="true" />
+			
+		<div class="ssp-content-header">
+			<ui:include src="template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.header_my_tickets}" />
+			</ui:include>
+		</div>
+		<div class="ssp-content-body-no-border">
+			<p:dataTable id="tableRequests" var="_request" value="#{ticketsMBean.supportRequests}"
+					 rowKey="#{_request.id}" selectionMode="single" 
+					 scrollable="true" scrollHeight="420" rowIndexVar="rowIndex"
+					 rowStyleClass="#{ticketsMBean.getRowColorIndicator(rowIndex)}" 
+					 emptyMessage="#{ticketsMBean.emptyTableMessage}" 
+					 sortBy="#{_request.id}" sortOrder="descending" >
+				
+				<f:facet name="header">
+		            <h:outputText value="#{msgs.header_requests}" />
+		        </f:facet>
+				
+			    <p:column headerText="#{msgs.label_id}" sortBy="#{_request.id}" style="width:5%">
+			        <h:outputText value="#{_request.id}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.label_title}" sortBy="#{_request.title}" styleClass="ssp-column-single-line">
+			        <h:outputText value="#{_request.title}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.label_status}" sortBy="#{_request.status.name}" 
+			    			styleClass="ssp-column-single-line ssp-text-center" style="width:10%;" >
+			        <h:outputText value="#{_request.status.name}" />
+			    </p:column>
+			 
+			    <p:column headerText="#{msgs.label_product}" sortBy="#{_request.product.name}" 
+			    			styleClass="ssp-column-single-line ssp-text-center" style="width:13%" >
+			        <h:outputText value="#{_request.product.name}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.label_open_date}" sortBy="#{_request.openDate}" 
+			    			styleClass="ssp-text-center" style="width:12%;">
+			        <h:outputText value="#{_request.openDate}">
+			        	<f:convertDateTime pattern="#{msgs.pattern_date}" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.label_close_date}" sortBy="#{_request.closeDate}"  
+			    			styleClass="ssp-text-center" style="width:10%;">
+			        <h:outputText value="#{_request.closeDate}" rendered="#{not empty _request.closeDate}">
+			        	<f:convertDateTime pattern="#{msgs.pattern_date}" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.label_responsible}" styleClass="ssp-column-single-line ssp-text-center" style="width:16%;">
+			        <h:outputText value="#{not empty _request.treatmentInfo.supportAnalyst
+			        							? _request.treatmentInfo.supportAnalyst.toString()
+			        							: msgs.label_not_assigned}"  />
+			    </p:column>
+			    
+			    <f:facet name="footer">
+			    	 <h:outputFormat value="#{msgs.message_number_of_requests}">
+			    	 	<f:param value="#{ticketsMBean.supportRequests.size()}" ></f:param>
+			    	 </h:outputFormat>
+			   	</f:facet>
+			   	
+			   	<p:ajax event="rowDblselect" listener="#{ticketsMBean.viewRequestTicket}" />
+			   	
+			</p:dataTable>
+			
+			<div class="ssp-table-filter">
+				<h:form id="formStatusFilter">
+				
+					<p:blockUI id="blockUI" widgetVar="bui" block=":mainContainer">
+					    <h:graphicImage library="ssp-web-res" name="images/loader.gif" />
+					</p:blockUI>
+				
+					<p:panelGrid id="statusFilterGrid" styleClass="form-grid" cellpadding="5">								
+						<p:row>
+							<p:column>
+								<h:outputLabel value="#{msgs.label_status_filter}" for="statusFilter" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="statusFilter" value="#{ticketsMBean.statusFilter}" style="width:150px;" >
+									<f:selectItem itemLabel="#{msgs.label_all}" itemValue="" />
+									<f:selectItems value="#{ticketsMBean.availableStatus}" var="_status" itemValue="#{_status}" itemLabel="#{_status.name}" />
+									<p:ajax process="@this" listener="#{ticketsMBean.filterRequestsByStatus}" event="change" 
+											onstart="PF('bui').show();" oncomplete="PF('bui').hide();" update=":tableRequests"  />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</div>
+			
+			<!-- Refresh automatically the request list from time to time -->
+			<h:form id="pollTicketsForm" style="display: none;">			    
+			    <p:poll interval="60" update=":tableRequests" />
+			    
+			    <p:ajaxStatus onstart="PF('bui').show()" onsuccess="PF('bui').hide()" />
+			    
+			    <p:blockUI id="blockUI" widgetVar="bui" block=":mainContainer">
+					<h:graphicImage library="ssp-web-res" name="images/loader.gif" />
+				</p:blockUI>
+			</h:form>
+			
+		</div>
+    </ui:define>
+</ui:composition>

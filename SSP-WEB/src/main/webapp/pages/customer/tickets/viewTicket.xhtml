@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												    xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 	xmlns:h="http://java.sun.com/jsf/html"
+												 	xmlns:f="http://java.sun.com/jsf/core"
+												 	xmlns:p="http://primefaces.org/ui">
+		<f:metadata>
+			<f:viewParam name="ticket" value="#{ticketMBean.ticket}" />
+			<f:viewParam name="ticket" value="#{ticketStepMBean.step.ticket}" />
+			<f:event type="preRenderView" listener="#{ticketMBean.preRenderEvents}" />
+		</f:metadata>
+		    										 			 
+		<ui:define name="ssp-content-area">
+		
+			<div class="ssp-content-header">
+				<ui:include src="../template/breadcrumb.xhtml">
+					<ui:param name="locationLabel" value="#{msgs.header_view_ticket}" />
+				</ui:include>
+			</div>
+
+			<div class="ssp-content-body">
+			
+				<!-- Toolbar -->
+				<ui:include src="ticketToolbar.xhtml" />
+					
+				<!-- Ticket Info -->
+				<p:accordionPanel id="accordion" binding="#{ticketMBean.accordion}">
+					<p:tab title="#{msgs.label_ticket.concat(ticketMBean.ticket.id)}">
+					
+						<p:panel header="#{msgs.tab_request_info}">
+							<div class="panel-ticket-info">
+								<p:panelGrid cellpadding="2" styleClass="table-ticket-info"
+												rowIndexVar="rowIndex" rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}">
+									<p:row >
+										<p:column style="width:150px;" ><h:outputText value="#{msgs.label_request_date}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.requestDate}" /></p:column>
+									</p:row>									
+									<p:row>
+										<p:column>
+											<h:outputText value="#{msgs.label_status}" />
+										</p:column>
+										<p:column styleClass='#{ticketMBean.getStyleStatusColumn()}'>
+											<h:outputText value="#{ticketMBean.ticket.status.name}" />
+											<h:outputFormat value=" [{0}]" rendered='#{ticketMBean.ticket.closed}'>
+												<f:param value="#{ticketMBean.closeDate}" />
+											</h:outputFormat>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.label_requestor}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.requester}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.label_ticket_title}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.title}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.label_priority}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.priority.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.label_product}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.product.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column><h:outputText value="#{msgs.label_category}" /></p:column>
+										<p:column><h:outputText value="#{ticketMBean.ticket.category.name}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2"><h:outputText value="#{msgs.label_description}" /></p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">
+											<div class="ticket-desc-text truncated">
+												<h:outputText value="#{ticketMBean.ticket.description}" />
+											</div>
+											<p:commandButton id="buttonViewMore" title="#{msgs.button_view_more}" 
+				   								 icon="fa fa-eye" alt="#{msgs.button_view_more}"
+				   								 styleClass="ticket-desc-readmore-button"
+				   								 actionListener="#{ticketMBean.openTicketDetailsDialog()}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</div>
+						</p:panel>
+						
+					</p:tab>
+					<p:tab title="#{msgs.tab_request_attachments}">
+						<p:scrollPanel mode="native" styleClass="ssp-attach-list-scroll-panel">
+							<h:form id="ticketAttachments">
+								<p:dataTable id="sspTicketAttachList" var="_attachment" value="#{ticketMBean.ticket.attachments}"
+									emptyMessage="#{msgs.message_attachments_not_found_ticket}"
+									rowIndexVar="rowIndex" rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}" >
+							    	
+					    			<p:column headerText="#{msgs.label_file}">
+					    				<h:commandLink value="#{_attachment.filename}" styleClass="decorated-link"
+					    					action="#{ticketMBean.attachmentMBean.download(_attachment)}" />
+					    			</p:column>
+					    			
+					    			<p:column headerText="#{msgs.label_file_size}" style="width: 10%; text-align: center;">
+					    				<h:outputText value="#{_attachment.size}">
+					    					<f:converter converterId="fileSizeConverter" />
+					    				</h:outputText>
+					    			</p:column>
+							    </p:dataTable>
+							</h:form>
+						</p:scrollPanel>
+						
+					</p:tab>
+					<p:tab title="#{msgs.tab_request_progress}">
+						<p:dataTable id="tableAndamentos" var="_step" value="#{ticketMBean.sortedSteps}"
+				 				rowKey="#{_step.id}" sortBy="#{_step.id}" sortOrder="descending"
+				 				scrollable="true" scrollHeight="320" rowIndexVar="rowIndex"
+				 				rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}"
+				 				emptyMessage="#{msgs.message_steps_not_found}" >
+						
+							<p:column headerText="#{msgs.label_date}" sortBy="#{_step.date}" style="width:12%">
+						        <h:outputText value="#{_step.date}">
+						        	<f:convertDateTime pattern="#{msgs.pattern_datetime}" type="both"  />
+						        </h:outputText>
+						    </p:column>
+						        
+						    <p:column headerText="#{msgs.label_description}" sortBy="#{_step.description}" styleClass="truncated">
+						        <p:commandLink actionListener="#{ticketStepMBean.viewStep(_step.id)}" styleClass="decorated-link" >
+						        	<h:outputText value="#{_step.description}" />
+						        </p:commandLink>
+						    </p:column>
+						    
+						    <p:column headerText="#{msgs.label_added_by}" sortBy="#{_step.openedBy()}" style="width:15%">
+						        <h:outputText value="#{_step.openedBy()}" />
+						    </p:column>
+
+						    <p:column headerText="" style="width:5%; text-align: center;">
+						        <h:graphicImage library="ssp-web-res" name="images/icons/attachment.png" 
+						        				alt="#{msgs.label_attached_items}" 
+						        				title="#{msgs.label_attached_items}" 
+						        				rendered="#{!empty _step.attachments}" />
+						    </p:column>
+							    			
+						</p:dataTable>
+					</p:tab>
+				</p:accordionPanel>
+			</div>
+		</ui:define>
+</ui:composition>

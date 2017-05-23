@@ -1,0 +1,142 @@
+@CHARSET "ISO-8859-1";
+
+/* Index Support Login Page */
+#mainContainerIndex
+{
+	width: 1570px;
+	height: 760px;
+	position: absolute;
+	margin: 0 auto;
+	padding: 0;
+}
+
+#index-logo
+{
+	width: 300px;
+	height: 140px;
+	position: relative;
+	margin-top: 130px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#index-login-area
+{
+	width: 469px;
+	height: 234px;
+	position: relative;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image:url("#{resource['ssp-web-res/images:login-bg.png']}"); 
+}
+
+#index-version
+{
+	width: 469px;
+	height: 17px;
+	position: relative;
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-size: 10px;
+}
+
+#index-login-area tr, #index-login-area td
+{
+    border-style: none;
+}
+
+#index-login-area label
+{
+	color: #AAA;
+	font-weight: bold;
+}
+
+.index-toolbar
+{
+	margin-top: -5px;
+}
+
+#index-login-fields
+{
+	position: absolute;
+	width: 350px;
+	top: 58px;
+	right: 52px;
+}
+
+#index-login-fields #form-login
+{
+	float: right;
+	top: 0;
+	right: 0;
+}
+
+#index-login-messages
+{
+	float: right;
+	margin-top: -90px;
+}
+
+#index-login-messages .ui-widget 
+{
+    font-size: 75%;
+}
+
+#index-watermark
+{
+	position: absolute;
+	left: -10px;
+	bottom: 10px;
+}
+
+#index-footer
+{
+	width: 100%;
+	height: 210px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.index-footer-content
+{
+	position: absolute;
+	bottom: 5px;
+	left: 44%;
+}
+
+/* Header Elements */
+#sspMemberPhoto
+{
+	position: absolute;
+	top: 6px;
+	left: 2px;
+}
+
+#sspLogoInline
+{
+	float: right;
+	margin: 40px 0 0 0;
+}
+
+#loggedUserInfo
+{
+	width: 262px;
+	position: absolute;
+	top: 77px;
+	left: 2px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#loggedUserInfo i 
+{
+	margin-right: 5px;
+}
+
+/* Home Page */
+

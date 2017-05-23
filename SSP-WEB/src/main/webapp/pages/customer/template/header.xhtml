@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  			xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:p="http://primefaces.org/ui">
+
+	<div class="header-tool-bar">
+		<h:form id="form-header-options">
+			<ul>
+				<li>
+					<i class="fa fa-cogs"></i>
+					<p:commandLink value="#{msgs.button_configurations}" />
+				</li>
+				<li>|</li>
+				<li>
+					<i class="fa fa-power-off"></i>
+					<p:commandLink value="#{msgs.button_logoff}" actionListener="#{loginMBean.doLogoff}">
+						 <p:confirm header="#{msgs.message_confirm_logoff_title}" message="#{msgs.message_confirm_logoff}" icon="ui-icon-alert"  />
+					</p:commandLink>
+				</li>
+			</ul>
+		</h:form>
+		<ui:include src="user_info.xhtml" />
+	</div>
+
+	<div id="ssp-header">
+		<div id="ssp-header-company-logo">
+			<h:graphicImage library="ssp-web-res" name="images/logo-medium.png"></h:graphicImage>
+		</div>
+	</div>
+	
+</ui:composition>

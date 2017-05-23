@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<div class="ssp-ticket-tools">
+		<h:form id="ticketToolsForm">
+			<p:toolbar id="tools">
+	   			<f:facet name="left">
+		   				
+	   				<p:commandButton id="buttonAddProgress" title="#{msgs.button_add_step}" 
+	   								 icon="fa fa-comments" 
+	   								 disabled="#{ticketMBean.ticket.closed}"
+	   								 actionListener="#{ticketStepMBean.openAddStepDialog}">
+	   					<p:ajax event="dialogReturn" listener="#{ticketStepMBean.onAddStep}" />
+	   				</p:commandButton>
+	   				
+	   				<p:tooltip id="toolTipAddProgress" for="buttonAddProgress" value="#{msgs.button_add_step}" />
+	
+					<!-- Workaround: PrimeFaces 5.0 does not support menu item with ajax tag and dialog return -->
+			    	<p:commandButton id="cancelTicketButton" value="#{msgs.button_cancel_ticket}"
+	               					 actionListener="#{ticketMBean.openCancelTicketDialog}"
+	               					 disabled="#{ticketMBean.ticket.closed}" style="display: none;" >              			   			   
+		            	<p:ajax event="dialogReturn" listener="#{ticketMBean.onCancel}" />
+		            </p:commandButton>
+	
+	   				<span class="ui-separator">
+	            		<span class="ui-icon ui-icon-grip-dotted-vertical" />
+	         		</span>
+	   			</f:facet>
+		     	<f:facet name="right">
+		     		<p:menuButton value="#{msgs.button_more_options}">
+		               	<p:menuitem>
+		               		
+		               		<!-- Workaround: PrimeFaces 5 does not support menu item with global dialog yet -->
+	               			<p:commandLink styleClass="ui-menuitem-link ui-corner-all" style="font-size: 1em;" 
+	               							actionListener="#{ticketMBean.markTicketAsResolved()}" ajax="false"
+	               							disabled="#{ticketMBean.ticket.closed}">
+	               				<h:outputText styleClass="ui-menuitem-icon ui-icon ui-icon-check" />
+        						<h:outputText styleClass="ui-menuitem-text" value="#{msgs.button_mark_resolved}" />
+        						<p:confirm header="#{msgs.message_confirm_ticket_solved_title}" 
+		               					   message="#{msgs.message_confirm_ticket_solved}" 
+		               					   icon="ui-icon-question" />
+		               		</p:commandLink>
+		               		
+		               	</p:menuitem>
+		               
+		                <p:menuitem value="#{msgs.button_cancel_ticket}" icon="ui-icon-info"
+	               					disabled="#{ticketMBean.ticket.closed}" 
+		                			onclick="document.getElementById('ticketToolsForm:cancelTicketButton').click();" >			
+						</p:menuitem>
+		               	
+		               	<p:menuitem value="#{msgs.button_back}" icon="ui-icon ui-icon-arrowreturnthick-1-w" outcome="/pages/customer/home.jsf" />
+		               	
+		           	</p:menuButton>
+		    	</f:facet>
+			</p:toolbar>
+		</h:form>
+ 	</div>
+ 	
+</ui:composition>

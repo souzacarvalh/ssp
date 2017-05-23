@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  			xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:p="http://primefaces.org/ui">
+
+	<div class="header-tool-bar">
+		<h:form id="form-header-options">
+			<ul>
+				<li>
+					<i class="fa fa-cogs"></i>
+					<p:commandLink value="#{msgs.ssp_button_configurations}" />
+				</li>
+				<li>|</li>
+				<li>
+					<i class="fa fa-power-off"></i>
+					<p:commandLink value="#{msgs.ssp_button_logoff}" actionListener="#{loginMBean.doLogoff}">
+						 <p:confirm header="#{msgs.ssp_message_confirm_logoff_title}" message="#{msgs.ssp_message_confirm_logoff}" icon="ui-icon-alert"  />
+					</p:commandLink>
+				</li>
+			</ul>
+		</h:form>
+		<div id="sspLogoInline">
+			<p:graphicImage library="ssp-web-res" name="images/logo-inline.png" />
+		</div>
+	</div>
+
+	<div id="ssp-header">		
+		<ui:include src="user.xhtml" />
+	</div>
+	
+</ui:composition>

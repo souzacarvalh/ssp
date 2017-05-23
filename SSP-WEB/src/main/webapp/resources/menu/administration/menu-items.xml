@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panelmenu>
+	<submenus>
+		<submenu label="#{msgs.ssp_submenu_support}" icon="ui-icon-home">
+			<menuitems>
+				<menuitem value="#{msgs.ssp_menu_admin_routes}" url="/pages/administration/manage/routes.jsf" icon="fa fa-mail-forward" />
+				<menuitem value="#{msgs.ssp_menu_admin_sla}" url="/pages/administration/manage/sla.jsf" icon="fa fa-clock-o" />
+			</menuitems>
+		</submenu>
+	</submenus>
+</panelmenu>

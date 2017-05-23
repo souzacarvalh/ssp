@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui">
+	<div class="breadcrumb">
+		<p:breadCrumb>
+		    <p:menuitem value="Home" url="/pages/customer/home.jsf" />
+		    <p:menuitem value="#{locationLabel}" url="#" />
+		</p:breadCrumb>
+	</div>
+	<div class="help-topic">
+		<p:graphicImage library="ssp-web-res" name="images/icons/help_icon.png" />
+	</div>
+</ui:composition>

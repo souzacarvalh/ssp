@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../template/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+												 xmlns:ui="http://java.sun.com/jsf/facelets"
+											 	 xmlns:h="http://java.sun.com/jsf/html"
+												 xmlns:f="http://java.sun.com/jsf/core"
+												 xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="ssp-content-area">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{ratingMBean.preRenderEvents}" />
+		</f:metadata>
+	
+		<div class="ssp-content-header">
+			<ui:include src="../template/breadcrumb.xhtml">
+				<ui:param name="locationLabel" value="#{msgs.ssp_label_feedback}" />
+				<ui:param name="locationUrl" value="\/\#" />
+			</ui:include>
+		</div>
+		
+		<div class="ssp-content-body-no-border">
+			<h:form id="feedbackForm">
+				<p:dataTable id="feedbackTable" var="_treatment" value="#{ratingMBean.treatmensReadyForRating}"
+						 rowKey="#{_treatment.id}" selectionMode="single" 
+						 scrollable="true" scrollHeight="420" rowIndexVar="rowIndex"
+						 rowStyleClass="#{rowIndex % 2 ne 0 ? 'odd-row' : null}"
+						 emptyMessage="#{msgs.ssp_support_rating_empty_table}" 
+						 sortBy="#{_treatment.id}" sortOrder="ascending" >
+					
+					<f:facet name="header">
+			            <h:outputText value="#{msgs.ssp_header_requests}" />
+			        </f:facet>
+					
+				    <p:column headerText="#{msgs.ssp_header_id}" sortBy="#{_treatment.id}" style="width:5%">
+				        <h:outputText value="#{_treatment.id}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.ssp_header_title}" sortBy="#{_treatment.ticket.title}" style="width:30%">
+				        <h:outputText value="#{_treatment.ticket.title}" />
+				    </p:column>
+				    
+				   <p:column headerText="#{msgs.ssp_header_open_date}" sortBy="#{_treatment.ticket.openDate}" 
+				    			styleClass="ssp-text-center" style="width:15%;">
+				        <h:outputText value="#{_treatment.ticket.openDate}">
+				        	<f:convertDateTime pattern="#{msgs.ssp_pattern_date}" />
+				        </h:outputText>
+				   </p:column>
+				    
+				   <p:column headerText="#{msgs.ssp_header_close_date}" sortBy="#{_treatment.ticket.closeDate}" 
+				    			styleClass="ssp-text-center" style="width:15%;">
+				        <h:outputText value="#{_treatment.ticket.closeDate}">
+				        	<f:convertDateTime pattern="#{msgs.ssp_pattern_date}" />
+				        </h:outputText>
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.ssp_header_rate}" styleClass="ssp-text-center" style="width:10%;">
+				        <p:rating value="#{_treatment.rating.rate}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.ssp_header_comments}" style="width:25%;">
+				       <p:inputText value="#{_treatment.rating.comment}" maxlength="30" style="width: 250px; margin-right: 8px;" />
+				       <p:commandButton id="btnSend" icon="fa fa-share-square" styleClass="ssp_in_row_button" 
+						    			title="#{msgs.ssp_tootip_send_feedback}" ajax="false"
+						    			action="#{ratingMBean.rateIt(_treatment)}" />
+	
+				    </p:column>
+	   	
+				</p:dataTable>
+			</h:form>
+		</div>
+		
+    </ui:define>
+</ui:composition>

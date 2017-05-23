@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panelmenu>
+	<submenus>
+		<submenu label="#{msgs.ssp_submenu_support}" icon="ui-icon-home">
+			<menuitems>
+				<menuitem value="#{msgs.ssp_menu_tickets}" url="/pages/support/home.jsf" icon="fa fa-navicon" />
+			</menuitems>
+		</submenu>
+	</submenus>
+</panelmenu>
