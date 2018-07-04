@@ -8,7 +8,7 @@ This is a simplified support tool for customer based on help tickets. Produced a
 
 * Configuration
 
-Technology Stack: EJB 3.1, CDI, JSF (Prime Faces 5), JPA 2 (EclipseLink), MySQL 5.1, Glassfish 4.1
+Technology Stack: EJB 3.1, CDI, JSF (Prime Faces 5), JPA 2 (EclipseLink), MySQL 5.1, Glassfish 4.1, Apache Shiro
 
 Tooling: FlyWay, Maven 3
 
