@@ -8,9 +8,15 @@ This is a simplified and customizable tool for customer support based on tickets
 
 * Configuration
 
-Technology Stack: Java 7, EJB 3.1, CDI, JSF (Prime Faces 5), JPA 2 (EclipseLink), MySQL 5.1, Glassfish 4.1, Apache Shiro
+- Technology Stack: Java 7, EJB 3.1, CDI, JSF (Prime Faces 5), JPA 2 (EclipseLink), Apache Shiro
 
-Tooling: FlyWay, Maven 3
+- Architecture: Multi Module / MVC
+
+- Tooling: FlyWay, Maven 3
+
+- Database: Relational / MySQL 5.1
+
+- Deployment: JavaEE Container - Developed on GlassFish 4.1
 
 ### History ###
 
