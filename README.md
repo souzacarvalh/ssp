@@ -16,7 +16,7 @@ This is a simplified and customizable tool for customer support based on tickets
 
 - Database: Relational / MySQL 5.1
 
-- Deployment: JavaEE Container - Developed on GlassFish 4.1
+- Deployment: JavaEE Container - Tested on JBoss WildFly 11
 
 ### History ###
 
